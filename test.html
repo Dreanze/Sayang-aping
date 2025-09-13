@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinta buat aping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .heart {
+            position: relative;
+            width: 200px;
+            height: 180px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .heart:hover {
+            transform: scale(1.1);
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            position: absolute;
+            left: 100px;
+            top: 0;
+            width: 100px;
+            height: 160px;
+            background: #d60606;
+            border-radius: 100px 100px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .message {
+            margin-top: 30px;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: #ff3e3e;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background-color: #ff1e1e;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff3e3e;
+            transform: rotate(45deg);
+            opacity: 0;
+        }
+
+        .floating-heart:before,
+        .floating-heart:after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff3e3e;
+            border-radius: 50%;
+        }
+
+        .floating-heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .floating-heart:after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes float {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(45deg);
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) rotate(45deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .heart {
+                width: 150px;
+                height: 135px;
+            }
+            
+            .heart:before, 
+            .heart:after {
+                width: 75px;
+                height: 120px;
+                left: 75px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="container">
+        <div class="heart" id="mainHeart"></div>
+        
+        <div class="message">
+            <h1>Buat aping</h1>
+            <p>Makasih yaaah udah terus nemenin saniiiiii :>.</p>
+            <button class="btn" id="loveBtn">Jangan dipencet ntar sebel</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainHeart = document.getElementById('mainHeart');
+            const loveBtn = document.getElementById('loveBtn');
+            const floatingHearts = document.getElementById('floatingHearts');
+            
+            // Animasi detak jantung
+            function pulseHeart() {
+                mainHeart.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    mainHeart.style.transform = 'scale(1)';
+                }, 500);
+            }
+            
+            setInterval(pulseHeart, 2000);
+            
+            // Buah hati mengambang
+            function createFloatingHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                
+                // Posisi acak
+                const startPosition = Math.random() * window.innerWidth;
+                heart.style.left = `${startPosition}px`;
+                heart.style.bottom = '0';
+                
+                // Ukuran acak
+                const size = Math.random() * 15 + 10;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                
+                // Warna acak
+                const colors = ['#ff3e3e', '#ff7f7f', '#ffafaf', '#ff6b6b'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.background = color;
+                heart.querySelector(':before').style.background = color;
+                heart.querySelector(':after').style.background = color;
+                
+                // Animasi
+                const duration = Math.random() * 5 + 5;
+                heart.style.animation = `float ${duration}s linear forwards`;
+                
+                floatingHearts.appendChild(heart);
+                
+                // Hapus setelah selesai
+                setTimeout(() => {
+                    heart.remove();
+                }, duration * 1000);
+            }
+            
+            // Buat hati mengambang secara berkala
+            setInterval(createFloatingHeart, 300);
+            
+            // Tambah banyak hati saat tombol diklik
+            loveBtn.addEventListener('click', function() {
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(createFloatingHeart, i * 100);
+                }
+                
+                // Animasi tombol
+                loveBtn.textContent = '❤️ Secinta itu yaaa sama aku sampe dipencet hehehe :> ❤️';
+                loveBtn.style.background = '#ff7f7f';
+                
+                setTimeout(() => {
+                    loveBtn.textContent = 'jangan dipencet ntar sebel';
+                    loveBtn.style.background = '#ff3e3e';
+                }, 2000);
+            });
+            
+            // Animasi saat hover di hati utama
+            mainHeart.addEventListener('click', function() {
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(createFloatingHeart, i * 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
